@@ -7,6 +7,7 @@ const IMAGE = '/images/dresser-editorial.png';
 const courseUrl = 'https://stan.store/missmaerevivals';
 const types = ['Dresser','Nightstands','Buffet / Credenza','Entry / Sofa Table','Cabinet','Other'];
 const sources = ['Facebook Marketplace','Thrift Store','Garage / Estate Sale','Curb / Free','Already Own It'];
+const choiceImages = {'Dresser':'dresser','Nightstands':'nightstands','Buffet / Credenza':'buffet','Entry / Sofa Table':'table','Cabinet':'cabinet','Other':'other','Facebook Marketplace':'marketplace','Thrift Store':'thrift','Garage / Estate Sale':'estate','Curb / Free':'curb','Already Own It':'own'};
 const problems = ['Scratches','Water stains','Chipped veneer','Loose hardware','Sticky drawers','Odor'];
 const phases = [
   {name:'Evaluate', kicker:'Know your piece', tasks:['Confirm the piece is sturdy and worth the work','Photograph the before and note any damage'], tip:'Check every drawer, corner, and joint before you commit. A pretty front can hide a lot of extra work.', time:'15–20 min'},
@@ -45,7 +46,7 @@ function App(){
   const tip=(copy)=> <div className="tip"><div className="tip-icon"><Lightbulb size={17}/></div><div><strong>Catie’s Tip</strong><p>{copy}</p></div></div>;
   const button=(label,onClick,variant='primary',icon=true)=> <button className={`button ${variant}`} onClick={onClick}>{label}{icon&&<ArrowRight size={18}/>}</button>;
   const back=(target)=> <button className="back" onClick={()=>go(target)}><ArrowLeft size={18}/> Back</button>;
-  const choice=(value,selected,onClick)=> <button key={value} className={`choice ${selected?'selected':''}`} onClick={onClick}><span>{value}</span><span className="radio">{selected&&<Check size={13}/>}</span></button>;
+  const choice=(value,selected,onClick,withImage=false)=> <button key={value} className={`choice ${selected?'selected':''} ${withImage?'with-image':''}`} aria-pressed={selected} onClick={onClick}>{withImage&&<img className="choice-icon" src={`/images/choices/${choiceImages[value]}.png`} alt=""/>}<span className="choice-label">{value}</span><span className="radio">{selected&&<Check size={13}/>}</span></button>;
 
   return <div className="site"><div className="app-shell">
     <header className="topbar"><button className="brand" onClick={()=>go('home')} aria-label="Go home"><span className="brand-mark">m<span>✦</span></span><span>miss mae <em>revivals</em><small>FLIP COMPANION</small></span></button><button className="header-action" onClick={()=>go('flips')} aria-label="My flips"><Menu size={23}/></button></header>
@@ -58,8 +59,8 @@ function App(){
       <div className="home-note"><Sparkles size={18}/><span>Made for the magic in the messy middle.</span></div>
     </>}
     {screen==='new'&&<>{back('home')}{title('LET’S GET STARTED','Tell me about your find.','Every great flip starts with seeing the potential.')}
-      <div className="form-section"><div className="question-head"><span>01</span><h2>What are you flipping?</h2></div><div className="choice-grid">{types.map(v=>choice(v,type===v,()=>setType(v)))}</div></div>
-      <div className="form-section"><div className="question-head"><span>02</span><h2>Where did you find it?</h2></div><div className="choice-grid">{sources.map(v=>choice(v,source===v,()=>setSource(v)))}</div></div>
+      <div className="form-section"><div className="question-head"><span>01</span><h2>What are you flipping?</h2></div><div className="choice-grid">{types.map(v=>choice(v,type===v,()=>setType(v),true))}</div></div>
+      <div className="form-section"><div className="question-head"><span>02</span><h2>Where did you find it?</h2></div><div className="choice-grid">{sources.map(v=>choice(v,source===v,()=>setSource(v),true))}</div></div>
       <div className="form-section"><div className="question-head"><span>03</span><h2>What’s the purchase price?</h2></div><label className="price-input"><span>$</span><input type="number" min="0" value={price} onChange={e=>setPrice(e.target.value)} aria-label="Purchase price"/><small>USD</small></label><p className="field-hint">Free find? Enter $0.</p></div>{button('Evaluate This Piece',()=>go('evaluation'))}</>}
     {screen==='evaluation'&&<>{back('new')}{title('BUY THIS, NOT THAT','Is it a good flip?','Catie’s four checkpoints help you spot the pieces worth your time.')}
       <div className="eval-intro"><div className="intro-icon"><ClipboardList size={22}/></div><div><strong>The quick flip check</strong><p>Choose what best describes your {type.toLowerCase()}.</p></div></div>
