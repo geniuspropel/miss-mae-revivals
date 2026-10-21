@@ -1,7 +1,12 @@
 // Confirmed course titles. IDs stay stable across the library and project links.
+export const formatLessonTitle = title => title
+  .replace(/^L\d+\s+/, '')
+  .replace(/^Furniture Refinishing 101\s*-\s*/, '')
+  .trim();
+
 const module = (number, title, entries) => ({
   id: `module-${number}`, number, title,
-  lessons: entries.map(([id, lessonTitle]) => ({id, title:lessonTitle, moduleId:`module-${number}`}))
+  lessons: entries.map(([id, lessonTitle]) => ({id, title:lessonTitle, displayTitle:formatLessonTitle(lessonTitle), moduleId:`module-${number}`}))
 });
 
 export const COURSE_MODULES = [
